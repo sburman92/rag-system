@@ -1,0 +1,24 @@
+<div class="container">
+  <header>
+    <h1>{{ title }}</h1>
+    <nav class="tabs">
+      <button 
+        [class.active]="activeTab === 'chat'" 
+        (click)="switchTab('chat')"
+        class="tab-button">
+        Chat
+      </button>
+      <button 
+        [class.active]="activeTab === 'indexer'" 
+        (click)="switchTab('indexer')"
+        class="tab-button">
+        Index Repository
+      </button>
+    </nav>
+  </header>
+
+  <main class="content">
+    <app-chat *ngIf="activeTab === 'chat'"></app-chat>
+    <app-indexer *ngIf="activeTab === 'indexer'"></app-indexer>
+  </main>
+</div>

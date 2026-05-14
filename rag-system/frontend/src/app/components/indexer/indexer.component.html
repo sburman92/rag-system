@@ -1,0 +1,72 @@
+<div class="indexer-container">
+  <div class="form-section">
+    <h2>Index a GitHub Repository</h2>
+    <p class="description">
+      Enter a GitHub repository URL to index its codebase. The system will read all code files, chunk them, generate embeddings, and store them in the vector database.
+    </p>
+
+    <div class="form-group">
+      <label for="repoUrl">GitHub Repository URL</label>
+      <input 
+        id="repoUrl"
+        type="text" 
+        [(ngModel)]="repoUrl" 
+        placeholder="https://github.com/username/repository"
+        [disabled]="isIndexing"
+        class="input-field">
+      <small>Examples: https://github.com/angular/angular, https://github.com/torvalds/linux</small>
+    </div>
+
+    <button 
+      (click)="indexRepository()" 
+      [disabled]="isIndexing || !repoUrl.trim()"
+      class="index-button">
+      {{ isIndexing ? 'Indexing...' : 'Start Indexing' }}
+    </button>
+  </div>
+
+  <div *ngIf="isIndexing" class="progress-section">
+    <h3>Indexing Progress</h3>
+    <div class="progress-bar-container">
+      <div class="progress-bar" [style.width.%]="indexProgress"></div>
+    </div>
+    <p class="progress-text">{{ indexProgress | number:'0.0' }}%</p>
+    <p class="status-message">{{ indexMessage }}</p>
+  </div>
+
+  <div *ngIf="indexMessage && !isIndexing" class="message-section" [class.success]="indexProgress === 100">
+    <p>{{ indexMessage }}</p>
+    <p *ngIf="lastIndexedRepo" class="repo-info">Repository: {{ lastIndexedRepo }}</p>
+  </div>
+
+  <div *ngIf="collectionStats" class="stats-section">
+    <h3>Vector Store Statistics</h3>
+    <div class="stats-card">
+      <div class="stat">
+        <span class="label">Indexed Chunks</span>
+        <span class="value">{{ collectionStats.count }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">Collection</span>
+        <span class="value">{{ collectionStats.name }}</span>
+      </div>
+    </div>
+
+    <button 
+      (click)="clearVectorStore()" 
+      class="danger-button">
+      Clear Vector Store
+    </button>
+  </div>
+
+  <div class="info-section">
+    <h3>📖 How it works</h3>
+    <ol>
+      <li><strong>Read:</strong> The system clones and reads the GitHub repository</li>
+      <li><strong>Chunk:</strong> Code files are split into overlapping chunks (1000 chars per chunk)</li>
+      <li><strong>Embed:</strong> Each chunk is converted to embeddings using Ollama</li>
+      <li><strong>Store:</strong> Embeddings are stored in Chroma vector database</li>
+      <li><strong>Query:</strong> When you ask a question, the system finds similar chunks and sends them to LLM</li>
+    </ol>
+  </div>
+</div>
