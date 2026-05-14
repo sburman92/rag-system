@@ -1,0 +1,41 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: rag-backend
+    env_file:
+      - ./backend/.env
+    environment:
+      API_PORT: 8000
+      CHROMA_DB_PATH: /app/chroma_db
+      OLLAMA_BASE_URL: http://ollama:11434
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma-data:/app/chroma_db
+    depends_on:
+      - ollama
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: rag-frontend
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: rag-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
+
+volumes:
+  chroma-data:
+  ollama-data:
