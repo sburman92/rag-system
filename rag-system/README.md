@@ -9,7 +9,7 @@ A local Retrieval-Augmented Generation app for indexing GitHub repositories and 
 - Generate local embeddings through Ollama
 - Store embeddings in a local Chroma database
 - Ask questions about the indexed codebase
-- View source file references in answers
+- View source file references in answers, including filename and similarity score
 
 ## Tech Stack
 
@@ -194,6 +194,8 @@ curl -X POST http://localhost:8000/query \
   -H "Content-Type: application/json" \
   -d '{"query":"What does this project do?","top_k":5}'
 ```
+
+The `/query` response includes relevant source metadata for each retrieved chunk, such as `file_path`, `filename`, line range, `chunk_index`, and semantic `score`.
 
 Clear the vector store:
 

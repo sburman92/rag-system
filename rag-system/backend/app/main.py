@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Dict
 import logging
+import os
 
 from app.config import config
 from app.modules.github_reader import GitHubReader
@@ -187,11 +188,16 @@ async def query_codebase(request: QueryRequest):
             context_parts.append(result['content'])
             context_parts.append("---")
             
+            filename = os.path.basename(file_path)
+            score = float(result.get('distance', 0.0))
+            
             sources.append({
                 'file_path': file_path,
+                'filename': filename,
                 'start_line': int(metadata.get('start_line', 0)),
                 'end_line': int(metadata.get('end_line', 0)),
                 'chunk_index': int(metadata.get('chunk_index', 0)),
+                'score': score,
             })
         
         context = "\n".join(context_parts)

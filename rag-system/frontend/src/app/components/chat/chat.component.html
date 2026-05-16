@@ -13,9 +13,11 @@
             <summary>📄 Sources ({{ message.sources.length }})</summary>
             <ul>
               <li *ngFor="let source of message.sources" class="source-item">
-                <strong>{{ source.file_path }}</strong>
+                <strong>{{ source.filename || source.file_path }}</strong>
                 <br>
                 <small>Lines {{ source.start_line }}-{{ source.end_line }}</small>
+                <br>
+                <small>Score: {{ source.score | number:'1.3-3' }}</small>
               </li>
             </ul>
           </details>

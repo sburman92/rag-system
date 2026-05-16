@@ -6,9 +6,11 @@ interface Message {
   content: string;
   sources?: Array<{
     file_path: string;
+    filename: string;
     start_line: number;
     end_line: number;
     chunk_index: number;
+    score: number;
   }>;
   timestamp: Date;
 }
@@ -89,6 +91,7 @@ export class ChatComponent implements OnInit {
   }
 
   getSourceLabel(source: any): string {
-    return `${source.file_path} (Lines ${source.start_line}-${source.end_line})`;
+    const name = source.filename || source.file_path;
+    return `${name} (Lines ${source.start_line}-${source.end_line})`;
   }
 }

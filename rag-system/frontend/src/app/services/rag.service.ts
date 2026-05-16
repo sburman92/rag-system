@@ -21,9 +21,11 @@ export interface QueryResponse {
   answer: string;
   sources: Array<{
     file_path: string;
+    filename: string;
     start_line: number;
     end_line: number;
     chunk_index: number;
+    score: number;
   }>;
 }
 
